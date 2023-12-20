@@ -1,4 +1,4 @@
-package com.github.gr3gdev.doglife.auth.config;
+package com.github.gr3gdev.keycloak.auth.config;
 
 import org.jboss.resteasy.core.ResteasyContext;
 import org.jboss.resteasy.spi.Dispatcher;

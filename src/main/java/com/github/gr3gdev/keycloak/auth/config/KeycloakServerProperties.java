@@ -1,4 +1,4 @@
-package com.github.gr3gdev.doglife.auth.config;
+package com.github.gr3gdev.keycloak.auth.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

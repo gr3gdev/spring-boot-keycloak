@@ -1,4 +1,4 @@
-package com.github.gr3gdev.doglife.auth.config;
+package com.github.gr3gdev.keycloak.auth.config;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

@@ -1,4 +1,4 @@
-package com.github.gr3gdev.doglife.auth.config;
+package com.github.gr3gdev.keycloak.auth.config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.github.gr3gdev.doglife.auth.config.KeycloakServerProperties.AdminUser;
+import com.github.gr3gdev.keycloak.auth.config.KeycloakServerProperties.AdminUser;
 
 public class RealmManagerFactory {
 
