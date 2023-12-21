@@ -21,6 +21,6 @@ jobs:
       with:
         context: .
         file: ./Dockerfile
-        platforms: linux/amd64
+        platforms: linux/amd64,linux/arm64/v8
         push: true
         tags: gr3gdev/spring-boot-keycloak:latest

@@ -1,12 +1,12 @@
 # Build
-FROM gradle:jdk21-alpine as build
+FROM eclipse-temurin:21-jdk-alpine as build
 RUN mkdir /spring-boot-keycloak
 COPY . /spring-boot-keycloak
 WORKDIR /spring-boot-keycloak
-RUN gradle clean build
+RUN ./gradlew clean build
 
 # Optimize JRE
-FROM gradle:jdk21-alpine as customjre
+FROM eclipse-temurin:21-jdk-alpine as customjre
 RUN mkdir /work
 COPY --from=build /spring-boot-keycloak/build/libs/spring-boot-keycloak-0.0.1-SNAPSHOT.jar /work/spring-boot-keycloak.jar
 WORKDIR /work
