@@ -13,7 +13,7 @@ java {
 
 ext {
 	restEasyVersion = '6.2.6.Final'
-	keycloakVersion = '22.0.5'
+	keycloakVersion = '23.0.3'
 }
 
 configurations {
@@ -31,6 +31,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-undertow'
 	implementation "org.jboss.resteasy:resteasy-jackson2-provider:$restEasyVersion"
 	implementation "org.keycloak:keycloak-dependencies-server-all:$keycloakVersion"
 	implementation "org.keycloak:keycloak-crypto-default:$keycloakVersion"
@@ -38,9 +39,14 @@ dependencies {
 	implementation "org.keycloak:keycloak-services:$keycloakVersion"
 	implementation "org.keycloak:keycloak-rest-admin-ui-ext:$keycloakVersion"
 	runtimeOnly 'org.postgresql:postgresql'
-    runtimeOnly 'com.h2database:h2'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+}
+
+configurations.implementation {
+    exclude(group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat')
+    exclude(group: 'io.undertow', module: 'undertow-websockets-jsr')
+    exclude(group: 'org.apache.tomcat', module: 'tomcat-jdbc')
 }
 
 tasks.named('test') {

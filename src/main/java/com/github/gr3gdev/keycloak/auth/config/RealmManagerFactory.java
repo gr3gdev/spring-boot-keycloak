@@ -4,15 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.models.RealmModel;
-import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.RealmRepresentation;
-import org.keycloak.representations.idm.RolesRepresentation;
 import org.keycloak.services.managers.ApplianceBootstrap;
 import org.keycloak.services.managers.RealmManager;
 import org.keycloak.util.JsonSerialization;
@@ -20,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.gr3gdev.keycloak.auth.config.KeycloakServerProperties.AdminUser;
 
 public class RealmManagerFactory {
@@ -48,49 +43,31 @@ public class RealmManagerFactory {
     }
 
     public void createRealm(KeycloakSessionFactory sessionFactory, KeycloakServerProperties keycloakServerProperties) {
-        KeycloakSession session = sessionFactory.create();
-        try {
-            session.getTransactionManager().begin();
+        if (!keycloakServerProperties.getRealmFile().isBlank()) {
+            KeycloakSession session = sessionFactory.create();
+            try {
+                session.getTransactionManager().begin();
 
-            final RealmManager manager = new RealmManager(session);
-
-            if (StringUtils.isNotBlank(keycloakServerProperties.getRealmFile())) {
+                final RealmManager manager = new RealmManager(session);
                 final RealmRepresentation realmRepresentation = JsonSerialization.readValue(
                         loadFile(keycloakServerProperties.getRealmFile()),
                         RealmRepresentation.class);
 
-                if (StringUtils.isNotBlank(keycloakServerProperties.getRolesFile())) {
-                    final RolesRepresentation roles = JsonSerialization.readValue(
-                            loadFile(keycloakServerProperties.getRolesFile()),
-                            RolesRepresentation.class);
-                    realmRepresentation.setRoles(roles);
-                }
-
-                if (StringUtils.isNotBlank(keycloakServerProperties.getClientsFile())) {
-                    final List<ClientRepresentation> clients = JsonSerialization.readValue(
-                            loadFile(keycloakServerProperties.getClientsFile()),
-                            new TypeReference<List<ClientRepresentation>>() {
-                            });
-                    realmRepresentation.setClients(clients);
-                }
-
                 final RealmModel realm = manager.getRealmByName(realmRepresentation.getRealm());
                 if (realm == null) {
-                    LOG.info("Create Realm : {}", realmRepresentation.getRealm());
+                    LOG.info("Import Realm : {}", realmRepresentation.getRealm());
                     manager.importRealm(realmRepresentation);
                 } else {
-                    LOG.info("Update Realm");
-                    // TODO
+                    // TODO update ?
                 }
 
+                session.getTransactionManager().commit();
+            } catch (Exception ex) {
+                LOG.warn("Failed to initialize Realm", ex);
+                session.getTransactionManager().rollback();
             }
-
-            session.getTransactionManager().commit();
-        } catch (Exception ex) {
-            LOG.warn("Failed to create Realm", ex);
-            session.getTransactionManager().rollback();
+            session.close();
         }
-        session.close();
     }
 
 }

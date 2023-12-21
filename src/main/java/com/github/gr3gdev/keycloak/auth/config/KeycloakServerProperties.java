@@ -11,8 +11,6 @@ public class KeycloakServerProperties {
     private String contextPath = "/auth";
 
     private String realmFile;
-    private String rolesFile;
-    private String clientsFile;
 
     private AdminUser adminUser = new AdminUser();
 

@@ -2,7 +2,7 @@
 
 Spring boot project with Keycloak embedded.
 
-The docker's image is optimized with a custom JRE (~200MB).
+The docker's image is optimized with a custom JRE (~230MB) and require a postgres database.
 
 
 ## docker
@@ -17,8 +17,6 @@ docker run -p 8080:8080 \
   -e ADMIN_USERNAME=admin
   -e ADMIN_PASSWORD=admin
   -e REALM_FILE=/home/user/my_realm.json
-  -e ROLES_FILE=/home/user/my_roles.json
-  -e CLIENTS_FILE=/home/user/my_clients.json
   gr3gdev/spring-boot-keycloak
 ```
 
@@ -42,15 +40,13 @@ services:
   keycloak:
     image: gr3gdev/spring-boot-keycloak
     environment:
-      - DATASOURCE_URL=jdbc:postgresql://dbauth:5432/auth
+      - DATASOURCE_URL=jdbc:postgresql://postgres:5432/auth
       - DATASOURCE_DRIVER=org.postgresql.Driver
       - DATASOURCE_USER=authuser
       - DATASOURCE_PASSWORD=authpassword
       - ADMIN_USERNAME=admin
       - ADMIN_PASSWORD=admin
       - REALM_FILE=/conf/realm.json
-      - ROLES_FILE=/conf/roles.json
-      - CLIENTS_FILE=/conf/clients.json
     volumes:
       - ./my_conf/keycloak:/conf
     depends_on:
